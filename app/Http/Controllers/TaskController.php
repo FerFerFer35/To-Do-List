@@ -69,9 +69,32 @@ class TaskController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Task $task)
+    public function show($id)
     {
         //
+        try {
+            $task = Task::find($id);
+            if (!$task) {
+                $data = [
+                    'message' => "Tarea no encontrada",
+                    'status' => 404
+                ];
+
+                return response()->json($data, 404);
+            }
+
+            $data = [
+                'task' => $task,
+                'status' => 200
+            ];
+
+            return response()->json($data, 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'status' => 500
+            ], 500);
+        }
     }
 
     /**
@@ -85,9 +108,56 @@ class TaskController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Task $task)
+    public function update(Request $request, $id)
     {
         //
+        try {
+            $task = Task::find($id);
+
+            if (!$task) {
+                $data = [
+                    'message' => 'Tarea no encontrada',
+                    'status' => 404
+                ];
+
+                return response()->json($data, 404);
+            }
+
+            $validator = Validator::make($request->all(), [
+                'title' => 'required',
+                'description' => 'required'
+            ]);
+
+            if ($validator->fails()) {
+                $data = [
+                    'message' => 'Error en la validación',
+                    'error' => $validator->errors(),
+                    'status' => 400
+                ];
+
+                return response()->json($data, 400);
+            }
+
+            $task->title = $request->title;
+            $task->description = $request->description;
+
+            $task->save();
+
+            $data = [
+                'message' => 'Tarea editada correctamente',
+                'task' => $task,
+                'status' => 200
+            ];
+
+            return response()->json($data, 200);
+        } catch (\Exception $e) {
+            $errorData = [
+                'error' => $e->getMessage(),
+                'status' => 500
+            ];
+
+            return response()->json($errorData, 500);
+        }
     }
 
     /**
@@ -96,5 +166,102 @@ class TaskController extends Controller
     public function destroy(Task $task)
     {
         //
+    }
+
+    public function showCompletedTasks()
+    {
+        $condition = true;
+
+        try {
+            $completedTasks = Task::where('completed', '=', $condition)->get();
+
+            if ($completedTasks->isEmpty()) {
+                $data = [
+                    'message' => 'Tareas no encontradas',
+                    'status' => 404
+                ];
+
+                return response()->json($data, 404);
+            }
+
+            $data = [
+                'completedTasks' => $completedTasks,
+                'status' => 200
+            ];
+
+            return response()->json($data, 200);
+        } catch (\Exception $e) {
+            $errorData = [
+                'error' => $e->getMessage(),
+                'status' => 500
+            ];
+
+            return response()->json($errorData, 500);
+        }
+    }
+
+    public function showPendingTasks()
+    {
+        $condition = false;
+
+        try {
+            $completedTasks = Task::where('completed', '=', $condition)->get();
+
+            if ($completedTasks->isEmpty()) {
+                $data = [
+                    'message' => 'Tareas no encontradas',
+                    'status' => 404
+                ];
+
+                return response()->json($data, 404);
+            }
+
+            $data = [
+                'completedTasks' => $completedTasks,
+                'status' => 200
+            ];
+
+            return response()->json($data, 200);
+        } catch (\Exception $e) {
+            $errorData = [
+                'error' => $e->getMessage(),
+                'status' => 500
+            ];
+
+            return response()->json($errorData, 500);
+        }
+    }
+
+    public function markAsCompleted($id)
+    {
+        try {
+            $task = Task::find($id);
+            if (!$task) {
+                $data = [
+                    'message' => 'Tarea no encontrada',
+                    'status' => 404
+                ];
+
+                return response()->json($data, 404);
+            }
+
+            $task->completed = true;
+            $task->save();
+
+            $data = [
+                'message' => 'Tarea marcada como completa',
+                'task' => $task,
+                'status' => 200
+            ];
+
+            return response()->json($data, 200);
+        } catch (\Exception $e) {
+            $errorData = [
+                'error' => $e->getMessage(),
+                'status' => 500
+            ];
+
+            return response()->json($errorData, 500);
+        }
     }
 }
