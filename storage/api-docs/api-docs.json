@@ -1,0 +1,263 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "ToDo List API",
+        "description": "Documentación de la API para la gestión de tareas",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "description": "Servidor local"
+        }
+    ],
+    "paths": {
+        "/api/tasks": {
+            "get": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Obtener todas las tareas",
+                "description": "Retorna todas las tareas registradas",
+                "operationId": "getTasksList",
+                "responses": {
+                    "200": {
+                        "description": "Tareas encontradas correctamente"
+                    },
+                    "404": {
+                        "description": "No se encontraron tareas"
+                    }
+                }
+            }
+        },
+        "/api/createTask": {
+            "post": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Crear nueva tarea",
+                "operationId": "createTask",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Hacer ejercicio"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "30 minutos de cardio"
+                                    },
+                                    "completed": {
+                                        "type": "boolean",
+                                        "example": false
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Tarea creada correctamente"
+                    },
+                    "400": {
+                        "description": "Error en la validación"
+                    }
+                }
+            }
+        },
+        "/api/tasks/{id}": {
+            "get": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Obtener tarea por ID",
+                "operationId": "getTaskById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la tarea",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Tarea encontrada"
+                    },
+                    "404": {
+                        "description": "Tarea no encontrada"
+                    }
+                }
+            }
+        },
+        "/api/updateTask/{id}": {
+            "patch": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Actualizar tarea",
+                "description": "Actualiza los detalles de una tarea existente",
+                "operationId": "updateTask",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la tarea",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "description"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Hacer ejercicio"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "30 minutos de cardio"
+                                    },
+                                    "completed": {
+                                        "type": "boolean",
+                                        "example": false
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Tarea actualizada correctamente"
+                    },
+                    "404": {
+                        "description": "Tarea no encontrada"
+                    }
+                }
+            }
+        },
+        "/api/showCompletedTasks": {
+            "get": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Obtener todas las tareas completadas",
+                "description": "Retorna todas las tareas completadas",
+                "operationId": "getTasksListCompleted",
+                "responses": {
+                    "200": {
+                        "description": "Tareas encontradas correctamente"
+                    },
+                    "404": {
+                        "description": "No se encontraron tareas"
+                    }
+                }
+            }
+        },
+        "/api/showPendingTasks": {
+            "get": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Obtener todas las tareas pendientes",
+                "description": "Retorna todas las tareas pendientes",
+                "operationId": "getTasksListPending",
+                "responses": {
+                    "200": {
+                        "description": "Tareas encontradas correctamente"
+                    },
+                    "404": {
+                        "description": "No se encontraron tareas"
+                    }
+                }
+            }
+        },
+        "/api/markAsCompleted/{id}": {
+            "patch": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Marcar tarea como completada",
+                "description": "Actualiza el estado de una tarea a completada",
+                "operationId": "markTaskAsCompleted",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la tarea",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Tarea marcada como completada"
+                    },
+                    "404": {
+                        "description": "Tarea no encontrada"
+                    }
+                }
+            }
+        },
+        "/api/markAsPending/{id}": {
+            "patch": {
+                "tags": [
+                    "Tasks"
+                ],
+                "summary": "Marcar tarea como pendiente",
+                "description": "Actualiza el estado de una tarea a pendiente",
+                "operationId": "markTaskAsPending",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la tarea",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Tarea marcada como pendiente"
+                    },
+                    "404": {
+                        "description": "Tarea no encontrada"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Tasks",
+            "description": "Tasks"
+        }
+    ]
+}
