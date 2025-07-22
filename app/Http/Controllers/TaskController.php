@@ -188,7 +188,7 @@ class TaskController extends Controller
      */
 
     /**
-     * @OA\Patch(
+     * @OA\Put(
      *     path="/api/updateTask/{id}",
      *     operationId="updateTask",
      *     tags={"Tasks"},
@@ -206,8 +206,7 @@ class TaskController extends Controller
      *         @OA\JsonContent(
      *             required={"title","description"},
      *             @OA\Property(property="title", type="string", example="Hacer ejercicio"),
-     *             @OA\Property(property="description", type="string", example="30 minutos de cardio"),
-     *             @OA\Property(property="completed", type="boolean", example=false)
+     *             @OA\Property(property="description", type="string", example="30 minutos de cardio")
      *         )
      *     ),
      *     @OA\Response(
@@ -241,8 +240,8 @@ class TaskController extends Controller
             // Validate the request data
             // Ensure that the title and description are required
             $validator = Validator::make($request->all(), [
-                'title' => 'required',
-                'description' => 'required'
+                'title' => 'max:255',
+                'description' => 'max:1000',
             ]);
 
             // If validation fails, return a 400 response with the validation errors

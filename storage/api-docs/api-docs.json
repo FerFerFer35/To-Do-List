@@ -103,7 +103,7 @@
             }
         },
         "/api/updateTask/{id}": {
-            "patch": {
+            "put": {
                 "tags": [
                     "Tasks"
                 ],
@@ -138,10 +138,6 @@
                                     "description": {
                                         "type": "string",
                                         "example": "30 minutos de cardio"
-                                    },
-                                    "completed": {
-                                        "type": "boolean",
-                                        "example": false
                                     }
                                 },
                                 "type": "object"
